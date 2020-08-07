@@ -4,7 +4,7 @@ import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import MapView, {Polyline} from 'react-native-maps';
 import * as TaskManager from 'expo-task-manager';
-import * as BackgroundFetch from 'expo-background-fetch';
+import { activateKeepAwake, deactivateKeepAwake } from 'expo-keep-awake';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import {connect} from 'react-redux';
 import {startRun, finishRun, runningUpdates, notRunningUpdates, initRun, initState, updateElevation, addTime, addBackgroundTime, saveBackgroundTime} from '../actions/runner'
@@ -76,6 +76,7 @@ class Run extends Component {
       }
 
     _startRun = () => {
+        activateKeepAwake();
         const timer = setInterval(() => {
             store.dispatch(addTime());
         }, 1000)
@@ -92,6 +93,7 @@ class Run extends Component {
     }
 
     _finishRun = () => {
+        deactivateKeepAwake();
         this.props.dispatch(finishRun());
         clearInterval(this.state.timer);
 
